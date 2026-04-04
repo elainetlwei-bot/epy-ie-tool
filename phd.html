@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EPY PhD — IE Data Entry</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;color:#1a1a1a;font-size:15px}
+  .container{max-width:640px;margin:0 auto;padding:2rem 1rem}
+  h1{font-size:22px;font-weight:600;margin-bottom:4px}
+  .subtitle{font-size:14px;color:#666;margin-bottom:2rem}
+  label{font-size:13px;color:#555;display:block;margin-bottom:4px;margin-top:14px}
+  select{width:100%;font-size:14px;padding:9px 12px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#1a1a1a}
+  select:focus{outline:none;border-color:#555}
+  .card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:1.25rem;margin-bottom:12px;cursor:pointer;transition:background 0.15s}
+  .card:hover{background:#f9f9f9}
+  .card.done{border-color:#86c968;background:#f0fae8}
+  .card.done:hover{background:#e4f5d4}
+  .card-top{display:flex;justify-content:space-between;align-items:center}
+  .card-course{font-weight:600;font-size:15px}
+  .card-meta{font-size:12px;color:#888;margin-top:3px}
+  .badge{display:inline-block;padding:2px 9px;border-radius:6px;font-size:11px;font-weight:600}
+  .badge-sp{background:#dbeafe;color:#1e40af}
+  .badge-fa{background:#dcfce7;color:#166534}
+  .badge-cy{background:#f3e8ff;color:#6b21a8}
+  .badge-pending{background:#f3f4f6;color:#6b7280}
+  .badge-done{background:#dcfce7;color:#166534}
+  .progress-wrap{margin:10px 0 1.5rem}
+  .progress-label{font-size:12px;color:#888;margin-bottom:5px}
+  .progress-bar{height:5px;background:#e5e5e5;border-radius:3px}
+  .progress-fill{height:100%;background:#4a90d9;border-radius:3px;transition:width 0.3s}
+  .screen{display:none}.screen.active{display:block}
+  .back-btn{background:none;border:1px solid #ddd;border-radius:8px;padding:5px 12px;font-size:13px;color:#555;cursor:pointer;margin-bottom:1.25rem}
+  .back-btn:hover{background:#f3f4f6}
+  .form-title{font-size:18px;font-weight:600;margin-bottom:2px}
+  .form-meta{font-size:13px;color:#888;margin-bottom:1rem}
+  .student-list{font-size:13px;background:#f0f4ff;color:#1e3a8a;padding:10px 14px;border-radius:8px;margin-bottom:12px;line-height:1.6}
+  .notice{font-size:13px;background:#fef3c7;color:#92400e;padding:10px 14px;border-radius:8px;margin-bottom:8px}
+  .sentence{font-size:16px;line-height:2.4;margin:1rem 0;color:#1a1a1a}
+  .num-input{display:inline-block;width:65px;font-size:16px;text-align:center;border:none;border-bottom:2px solid #aaa;background:transparent;color:#1a1a1a;font-family:inherit;padding:2px 4px;margin:0 5px}
+  .num-input:focus{outline:none;border-bottom-color:#4a90d9}
+  .warn{font-size:13px;color:#92400e;background:#fef3c7;padding:8px 12px;border-radius:8px;margin-top:10px}
+  .success-msg{font-size:14px;color:#166534;background:#dcfce7;padding:10px 14px;border-radius:8px;margin-top:14px}
+  .submit-btn{margin-top:1.5rem;padding:10px 28px;background:#1a1a1a;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit}
+  .submit-btn:hover{opacity:0.85}
+  .cancel-btn{margin-top:1.5rem;margin-left:10px;padding:10px 20px;background:transparent;color:#555;border:1px solid #ddd;border-radius:8px;font-size:14px;cursor:pointer;font-family:inherit}
+  .cancel-btn:hover{background:#f3f4f6}
+  .spinner{display:none;font-size:13px;color:#888;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Step 1: Select faculty -->
+  <div id="step-select" class="screen active">
+    <h1>EPY PhD — IE Data Entry</h1>
+    <p class="subtitle">Calendar Year 2025 &nbsp;·&nbsp; Select your name to get started</p>
+    <label for="faculty-select">Your name</label>
+    <select id="faculty-select" onchange="onFacultySelect()">
+      <option value="">— Select your name —</option>
+    </select>
+    <div id="assignment-list" style="margin-top:1.5rem"></div>
+  </div>
+
+  <!-- Step 2: Entry form -->
+  <div id="step-form" class="screen">
+    <button class="back-btn" onclick="goBack()">← Back</button>
+    <div class="form-title" id="form-title"></div>
+    <div class="form-meta" id="form-meta"></div>
+    <div class="student-list">
+      <strong>PhD students in the program in this assessment cycle:</strong><br>
+      Kelly Davis, Amber Crenshaw, Sam Stewart, Seger McGuire, Benjamin Ansah, Leila Kargaripadar, Nancy Florida, Corinne Kennedy, Grace Austin, Avery Tate
+    </div>
+    <div class="notice"><strong>Important:</strong> Count EPY majors only. Do not include students from outside the EPY program in either number.</div>
+    <div class="sentence" id="sentence-area"></div>
+    <div id="form-warn" class="warn" style="display:none"></div>
+    <div>
+      <button class="submit-btn" onclick="submitEntry()">Submit</button>
+      <button class="cancel-btn" onclick="goBack()">Cancel</button>
+    </div>
+    <div class="spinner" id="spinner">Saving...</div>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// CONFIGURATION — UPDATE THIS SECTION EACH YEAR
+// ============================================================
+
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHTva6L7i8b3P3FVQKh406L9mHlOsZGwEBfuTTuCYW0XxquFor1naZzTgEzLiY_lLW/exec';
+const REPORTING_YEAR = 'CY 2025';
+
+// ============================================================
+// ROSTER — UPDATE EACH YEAR
+// Only change: faculty name and semester
+// Do NOT change: course, outcome, ap, or sentence
+// ============================================================
+const ROSTER = [
+
+  // --- OUTCOME 1, AP 1 ---
+  // Preliminary exams — reported by coordinator
+  { faculty: 'Elaine Wei', course: 'Prelim Exam', semester: 'CY 2025', outcome: 1, ap: 1,
+    sentence: 'passed the written and oral preliminary examinations on their first attempt.' },
+
+  // --- OUTCOME 1, AP 2 ---
+  // EPY 9213: Multivariate statistics final project
+  { faculty: 'Elaine Wei', course: 'EPY 9213', semester: 'Fall 2025', outcome: 1, ap: 2,
+    sentence: 'scored satisfactory (80%) or better on the final project.' },
+
+  // --- OUTCOME 2, AP 1 ---
+  // Dissertation proposal/defense — reported by coordinator
+  { faculty: 'Elaine Wei', course: 'Dissertation', semester: 'CY 2025', outcome: 2, ap: 1,
+    sentence: 'who proposed or defended a dissertation study were judged by the doctoral committee as passing the proposal or defense.' },
+
+  // --- OUTCOME 2, AP 2 ---
+  // Conference presentations — reported by coordinator
+  { faculty: 'Elaine Wei', course: 'Conference Presentation', semester: 'CY 2025', outcome: 2, ap: 2,
+    sentence: 'of the students presented their research at a local, state, regional, or national conference.' },
+
+  // --- OUTCOME 3, AP 1 ---
+  // CV development — reported by coordinator
+  { faculty: 'Elaine Wei', course: 'CV Review', semester: 'CY 2025', outcome: 3, ap: 1,
+    sentence: 'developed, shared, and revised their curriculum vitae with faculty and peer graduate students for feedback.' },
+
+  // --- OUTCOME 3, AP 2 ---
+  // Annual evaluation — reported by coordinator
+  { faculty: 'Elaine Wei', course: 'Annual Eval', semester: 'CY 2025', outcome: 3, ap: 2,
+    sentence: 'were rated as making satisfactory progress with unanimous agreement by the program faculty.' },
+
+];
+
+// ============================================================
+// APP LOGIC — NO NEED TO EDIT BELOW THIS LINE
+// ============================================================
+
+const NAMES = [...new Set(ROSTER.map(r => r.faculty))].sort();
+let submitted = JSON.parse(localStorage.getItem('phd-ie-submitted-' + REPORTING_YEAR) || '[]');
+let curAssignment = null;
+
+function init() {
+  const sel = document.getElementById('faculty-select');
+  NAMES.forEach(n => {
+    const o = document.createElement('option');
+    o.value = n; o.textContent = n;
+    sel.appendChild(o);
+  });
+}
+
+function key(a) { return `${a.faculty}||${a.course}||${a.semester}||${a.ap}`; }
+function isSubmitted(a) { return submitted.includes(key(a)); }
+
+function onFacultySelect() {
+  const name = document.getElementById('faculty-select').value;
+  const div = document.getElementById('assignment-list');
+  if (!name) { div.innerHTML = ''; return; }
+  const mine = ROSTER.filter(r => r.faculty === name);
+  const done = mine.filter(a => isSubmitted(a)).length;
+  div.innerHTML = `
+    <div class="progress-wrap">
+      <div class="progress-label">${done} of ${mine.length} submitted</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(done / mine.length * 100)}%"></div></div>
+    </div>
+    ${mine.map(a => {
+      const sc = a.semester === 'CY 2025' ? 'badge-cy' : a.semester.startsWith('Sp') ? 'badge-sp' : 'badge-fa';
+      const isDone = isSubmitted(a);
+      return `<div class="card${isDone ? ' done' : ''}" onclick='openForm(${JSON.stringify(a).replace(/'/g, "&#39;")})'>
+        <div class="card-top">
+          <div>
+            <span class="card-course">${a.course}</span>
+            <span class="badge ${sc}" style="margin-left:8px">${a.semester}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            ${isDone ? `<span class="badge badge-done">Submitted</span>` : `<span class="badge badge-pending">Pending</span>`}
+            <span style="color:#aaa">→</span>
+          </div>
+        </div>
+        <div class="card-meta">Outcome ${a.outcome} · AP ${a.ap}</div>
+      </div>`;
+    }).join('')}
+    ${done === mine.length ? `<div class="success-msg">All done — thank you, ${name.split(' ')[0]}!</div>` : ''}
+  `;
+}
+
+function openForm(a) {
+  curAssignment = a;
+  document.getElementById('form-title').textContent = `${a.course} · ${a.semester}`;
+  document.getElementById('form-meta').textContent = `Outcome ${a.outcome} · Assessment Procedure ${a.ap}`;
+  document.getElementById('sentence-area').innerHTML =
+    `<input class="num-input" id="f-num" type="number" min="0" placeholder="__">
+     out of
+     <input class="num-input" id="f-den" type="number" min="0" placeholder="__">
+     of the students ${a.sentence}`;
+  document.getElementById('form-warn').style.display = 'none';
+  document.getElementById('spinner').style.display = 'none';
+  showStep('step-form');
+}
+
+function submitEntry() {
+  const warn = document.getElementById('form-warn');
+  warn.style.display = 'none';
+  const n = parseFloat(document.getElementById('f-num').value);
+  const d = parseFloat(document.getElementById('f-den').value);
+  if (isNaN(n) || isNaN(d)) { warn.textContent = 'Please fill in both numbers.'; warn.style.display = 'block'; return; }
+  if (n < 0 || d < 0) { warn.textContent = 'Please enter valid numbers.'; warn.style.display = 'block'; return; }
+  if (n === 0 && d === 0) { }  // Allow 0/0 as N/A
+  else if (d === 0) { warn.textContent = 'Total students cannot be zero unless both numbers are zero (N/A).'; warn.style.display = 'block'; return; }
+  if (n > d && d > 0) { warn.textContent = 'Students meeting the target cannot exceed total students.'; warn.style.display = 'block'; return; }
+
+  document.getElementById('spinner').style.display = 'block';
+
+  const payload = {
+    program: 'PhD',
+    faculty: curAssignment.faculty,
+    course: curAssignment.course,
+    semester: curAssignment.semester,
+    outcome: curAssignment.outcome,
+    ap: curAssignment.ap,
+    numerator: n,
+    denominator: d
+  };
+
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(() => {
+    submitted.push(key(curAssignment));
+    localStorage.setItem('phd-ie-submitted-' + REPORTING_YEAR, JSON.stringify(submitted));
+    document.getElementById('spinner').style.display = 'none';
+    goBack();
+  }).catch(() => {
+    document.getElementById('spinner').style.display = 'none';
+    warn.textContent = 'Submission failed. Please try again.';
+    warn.style.display = 'block';
+  });
+}
+
+function goBack() { showStep('step-select'); onFacultySelect(); }
+
+function showStep(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+init();
+</script>
+</body>
+</html>
