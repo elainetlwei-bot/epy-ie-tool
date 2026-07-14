@@ -54,7 +54,7 @@
   <!-- Step 1: Select faculty -->
   <div id="step-select" class="screen active">
     <h1>EPY MS — IE Data Entry</h1>
-    <p class="subtitle">Calendar Year 2025 &nbsp;·&nbsp; Select your name to get started</p>
+    <p class="subtitle">Calendar Year 2026 &nbsp;·&nbsp; Select your name to get started</p>
     <label for="faculty-select">Your name</label>
     <select id="faculty-select" onchange="onFacultySelect()">
       <option value="">— Select your name —</option>
@@ -92,7 +92,7 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHTva6L7i8b3P3FVQKh406L9mHlOsZGwEBfuTTuCYW0XxquFor1naZzTgEzLiY_lLW/exec';
 
 // Reporting year label — update each year
-const REPORTING_YEAR = 'CY 2025';
+const REPORTING_YEAR = 'CY 2026';
 
 // ============================================================
 // ROSTER — UPDATE EACH YEAR
@@ -102,37 +102,47 @@ const REPORTING_YEAR = 'CY 2025';
 const ROSTER = [
 
   // --- OUTCOME 1, AP 1 ---
-  // Comprehensive exam — reported by coordinator
-  { faculty: 'Elaine Wei', course: 'Comp Exam', semester: 'CY 2025', outcome: 1, ap: 1,
-    sentence: 'passed the comprehensive exam.' },
+  // EPY 6033: Literature review paper
+  { faculty: 'Kasia Gallo',    course: 'EPY 6033', semester: 'Spring 2026', outcome: 1, ap: 2,
+    sentence: 'scored satisfactory (80%) or better on the final project.' },
+  { faculty: 'Mehdi Garemani', course: 'EPY 6033', semester: 'Fall 2026',   outcome: 1, ap: 2,
+    sentence: 'scored satisfactory (80%) or better on the final project.' },
 
   // --- OUTCOME 1, AP 2 ---
-  // EPY 6033: Literature review paper
-  { faculty: 'Kasia Gallo',    course: 'EPY 6033', semester: 'Spring 2025', outcome: 1, ap: 2,
-    sentence: 'scored satisfactory (80%) or better on the final project.' },
-  { faculty: 'Mehdi Garemani', course: 'EPY 6033', semester: 'Fall 2025',   outcome: 1, ap: 2,
-    sentence: 'scored satisfactory (80%) or better on the final project.' },
-
+  // Comprehensive exam — reported by coordinator
+  { faculty: 'Elaine Wei', course: 'Comp Exam', semester: 'CY 2026', outcome: 1, ap: 1,
+    sentence: 'passed the comprehensive exam.' },
+ 
   // --- OUTCOME 2, AP 1 ---
   // EPY 6214: Statistics for social sciences
-  { faculty: 'Mehdi Garemani', course: 'EPY 6214', semester: 'Spring 2025', outcome: 2, ap: 1,
+  { faculty: 'Elaine Wei', course: 'EPY 6214', semester: 'Spring 2026', outcome: 2, ap: 1,
     sentence: 'scored satisfactory (80%) or better on the final percentage grade, as an index of their performance on a variety of tasks related to statistics for social sciences.' },
-  { faculty: 'Elaine Wei',     course: 'EPY 6214', semester: 'Fall 2025',   outcome: 2, ap: 1,
+  { faculty: 'Andy Parra Martinez',     course: 'EPY 6214', semester: 'Fall 2026',   outcome: 2, ap: 1,
     sentence: 'scored satisfactory (80%) or better on the final percentage grade, as an index of their performance on a variety of tasks related to statistics for social sciences.' },
 
   // --- OUTCOME 2, AP 2 ---
   // EPY 8214: Advanced statistics final project
-  { faculty: 'Andy Parra Martinez', course: 'EPY 8214', semester: 'Spring 2025', outcome: 2, ap: 2,
+  { faculty: 'Andy Parra Martinez', course: 'EPY 8214', semester: 'Spring 2026', outcome: 2, ap: 2,
     sentence: 'scored satisfactory (80%) or better on the final project.' },
 
   // --- OUTCOME 3, AP 1 ---
-  // CV development — reported by coordinator
-  { faculty: 'Elaine Wei', course: 'CV Review', semester: 'CY 2025', outcome: 3, ap: 1,
-    sentence: 'developed, shared, and revised their curriculum vitae with faculty and peer graduate students for feedback.' },
+  // EPY 8223: Ed Psych foundations final project 
+  { faculty: 'Kasia Gallo', course: 'EPY 8223', semester: 'Fall 2026', outcome: 3, ap: 1,
+    sentence: 'scored satisfactory (80%) or better on the final project, requiring them to locate, synthesize, and critically evaluate primary sources in educational psychology.' },
 
   // --- OUTCOME 3, AP 2 ---
   // Annual evaluation — reported by coordinator
-  { faculty: 'Elaine Wei', course: 'Annual Eval', semester: 'CY 2025', outcome: 3, ap: 2,
+  { faculty: 'Sareh Karami', course: 'EPY 6073', semester: 'Spring 2026', outcome: 3, ap: 2,
+    sentence: 'scored satisfactory (80%) or better on the final project, requiring them to apply motivational theories to an educational context.' },
+  
+  // --- OUTCOME 4, AP 1 ---
+  // CV development — reported by coordinator
+  { faculty: 'Elaine Wei', course: 'CV Review', semester: 'CY 2026', outcome: 3, ap: 1,
+    sentence: 'developed, shared, and revised their curriculum vitae with faculty and peer graduate students for feedback.' },
+
+  // --- OUTCOME 4, AP 2 ---
+  // Annual evaluation — reported by coordinator
+  { faculty: 'Elaine Wei', course: 'Annual Eval', semester: 'CY 2026', outcome: 3, ap: 2,
     sentence: 'were rated as making satisfactory progress with unanimous agreement by the program faculty.' },
 
 ];
