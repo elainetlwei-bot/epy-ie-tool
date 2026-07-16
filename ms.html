@@ -23,6 +23,7 @@
   .badge{display:inline-block;padding:2px 9px;border-radius:6px;font-size:11px;font-weight:600}
   .badge-sp{background:#dbeafe;color:#1e40af}
   .badge-fa{background:#dcfce7;color:#166534}
+  .badge-cy{background:#f3e8ff;color:#6b21a8}
   .badge-pending{background:#f3f4f6;color:#6b7280}
   .badge-done{background:#dcfce7;color:#166534}
   .progress-wrap{margin:10px 0 1.5rem}
@@ -50,8 +51,6 @@
 </head>
 <body>
 <div class="container">
-
-  <!-- Step 1: Select faculty -->
   <div id="step-select" class="screen active">
     <h1>EPY MS — IE Data Entry</h1>
     <p class="subtitle">Calendar Year 2026 &nbsp;·&nbsp; Select your name to get started</p>
@@ -62,14 +61,13 @@
     <div id="assignment-list" style="margin-top:1.5rem"></div>
   </div>
 
-  <!-- Step 2: Entry form -->
   <div id="step-form" class="screen">
     <button class="back-btn" onclick="goBack()">← Back</button>
     <div class="form-title" id="form-title"></div>
     <div class="form-meta" id="form-meta"></div>
     <div class="student-list">
       <strong>MS students in the program in this assessment cycle:</strong><br>
-      Sayed In Abdullah, Grace Austin, Colby Ginn, Maya Godavarthi, Hallie Gray House, Leila Kargaripadar, Emma Logan, Seger McGuire, Sam Stewart, Mary Cooper Bearden, Caitlyn Craft, Cayley Harrell, Maggie Stovall, Ken'zyria Williams, Khadija Nisa
+      Sayed In Abdullah, Sandys Ayuumah, Maya Godavarthi, Ally Johnson, Heather Omane, Seger McGuire, Sam Stewart, Carson McTaggart, Colby Ginn, Emma Logan, Hallie Gray House
     </div>
     <div class="notice"><strong>Important:</strong> Count EPY majors only. Do not include students from outside the EPY program in either number.</div>
     <div class="sentence" id="sentence-area"></div>
@@ -80,88 +78,60 @@
     </div>
     <div class="spinner" id="spinner">Saving...</div>
   </div>
-
 </div>
 
 <script>
 // ============================================================
 // CONFIGURATION — UPDATE THIS SECTION EACH YEAR
 // ============================================================
-
-// Your Google Apps Script URL — do not change this
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHTva6L7i8b3P3FVQKh406L9mHlOsZGwEBfuTTuCYW0XxquFor1naZzTgEzLiY_lLW/exec';
-
-// Reporting year label — update each year
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw_1dMcVM-0Kb02gMS-Q8C8JJvyThfm0ylxtsb0qkbfkXZ0DjtM1zC7mWFAb9EnXLtD3Q/exec';
 const REPORTING_YEAR = 'CY 2026';
 
 // ============================================================
 // ROSTER — UPDATE EACH YEAR
-// Only change: faculty name and semester
-// Do NOT change: course, outcome, ap, or sentence
 // ============================================================
 const ROSTER = [
+  // --- OUTCOME 1, AP 1: EPY 6033 Literature review paper
+  { faculty:'Kasia Gallo',        course:'EPY 6033', semester:'Spring 2026', outcome:1, ap:1,
+    sentence:'scored satisfactory (80%) or better on the final paper.' },
+  { faculty:'Mehdi Garemani',     course:'EPY 6033', semester:'Fall 2026',   outcome:1, ap:1,
+    sentence:'scored satisfactory (80%) or better on the final paper.' },
 
-  // --- OUTCOME 1, AP 1 ---
-  // EPY 6033: Literature review paper
-  { faculty: 'Kasia Gallo',    course: 'EPY 6033', semester: 'Spring 2026', outcome: 1, ap: 2,
-    sentence: 'scored satisfactory (80%) or better on the final project.' },
-  { faculty: 'Mehdi Garemani', course: 'EPY 6033', semester: 'Fall 2026',   outcome: 1, ap: 2,
-    sentence: 'scored satisfactory (80%) or better on the final project.' },
+  // --- OUTCOME 1, AP 2: Comprehensive exam — reported by coordinator
+  { faculty:'Elaine Wei',         course:'Comp Exam', semester:'CY 2026',    outcome:1, ap:2,
+    sentence:'passed the comprehensive examination.' },
 
-  // --- OUTCOME 1, AP 2 ---
-  // Comprehensive exam — reported by coordinator
-  { faculty: 'Elaine Wei', course: 'Comp Exam', semester: 'CY 2026', outcome: 1, ap: 1,
-    sentence: 'passed the comprehensive exam.' },
- 
-  // --- OUTCOME 2, AP 1 ---
-  // EPY 6214: Statistics for social sciences
-  { faculty: 'Elaine Wei', course: 'EPY 6214', semester: 'Spring 2026', outcome: 2, ap: 1,
-    sentence: 'scored satisfactory (80%) or better on the final percentage grade, as an index of their performance on a variety of tasks related to statistics for social sciences.' },
-  { faculty: 'Andy Parra Martinez',     course: 'EPY 6214', semester: 'Fall 2026',   outcome: 2, ap: 1,
-    sentence: 'scored satisfactory (80%) or better on the final percentage grade, as an index of their performance on a variety of tasks related to statistics for social sciences.' },
+  // --- OUTCOME 2, AP 1: EPY 6214 Statistics
+  { faculty:'Elaine Wei',         course:'EPY 6214', semester:'Spring 2026', outcome:2, ap:1,
+    sentence:'scored satisfactory (80%) or better on the final course grade as an index of performance across all tasks.' },
+  { faculty:'Andy Parra Martinez',course:'EPY 6214', semester:'Fall 2026',   outcome:2, ap:1,
+    sentence:'scored satisfactory (80%) or better on the final course grade as an index of performance across all tasks.' },
 
-  // --- OUTCOME 2, AP 2 ---
-  // EPY 8214: Intermediate statistics final project
-  { faculty: 'Andy Parra Martinez', course: 'EPY 8214', semester: 'Spring 2026', outcome: 2, ap: 2,
-    sentence: 'scored satisfactory (80%) or better on the final project.' },
+  // --- OUTCOME 2, AP 2: EPY 8214 Advanced statistics
+  { faculty:'Andy Parra Martinez',course:'EPY 8214', semester:'Spring 2026', outcome:2, ap:2,
+    sentence:'scored satisfactory (80%) or better on the final project.' },
 
-  // --- OUTCOME 3, AP 1 ---
-  // EPY 8223: Ed Psych foundations final project 
-  { faculty: 'Kasia Gallo', course: 'EPY 8223', semester: 'Fall 2026', outcome: 3, ap: 1,
-    sentence: 'scored satisfactory (80%) or better on the final project, requiring them to locate, synthesize, and critically evaluate primary sources in educational psychology.' },
+  // --- OUTCOME 4, AP 1: CV Review — reported by coordinator
+  { faculty:'Elaine Wei',         course:'CV Review',   semester:'CY 2026',  outcome:4, ap:1,
+    sentence:'developed, shared, and revised their curriculum vitae with faculty and peer graduate students for feedback.' },
 
-  // --- OUTCOME 3, AP 2 ---
-  // Annual evaluation — reported by coordinator
-  { faculty: 'Sareh Karami', course: 'EPY 6073', semester: 'Spring 2026', outcome: 3, ap: 2,
-    sentence: 'scored satisfactory (80%) or better on the final project, requiring them to apply motivational theories to an educational context.' },
-  
-  // --- OUTCOME 4, AP 1 ---
-  // CV development — reported by coordinator
-  { faculty: 'Elaine Wei', course: 'CV Review', semester: 'CY 2026', outcome: 3, ap: 1,
-    sentence: 'developed, shared, and revised their curriculum vitae with faculty and peer graduate students for feedback.' },
-
-  // --- OUTCOME 4, AP 2 ---
-  // Annual evaluation — reported by coordinator
-  { faculty: 'Elaine Wei', course: 'Annual Eval', semester: 'CY 2026', outcome: 3, ap: 2,
-    sentence: 'were rated as making satisfactory progress with unanimous agreement by the program faculty.' },
-
+  // --- OUTCOME 4, AP 2: Annual Eval — reported by coordinator
+  { faculty:'Elaine Wei',         course:'Annual Eval', semester:'CY 2026',  outcome:4, ap:2,
+    sentence:'were rated as making satisfactory progress with unanimous agreement by the program faculty.' },
 ];
+
+// Note: Outcome 3 (EPY 8223 & EPY 6073) not offered in CY 2026 — recorded as N/A by coordinator
 
 // ============================================================
 // APP LOGIC — NO NEED TO EDIT BELOW THIS LINE
 // ============================================================
-
 const NAMES = [...new Set(ROSTER.map(r => r.faculty))].sort();
 let submitted = JSON.parse(localStorage.getItem('ms-ie-submitted-' + REPORTING_YEAR) || '[]');
 let curAssignment = null;
 
 function init() {
   const sel = document.getElementById('faculty-select');
-  NAMES.forEach(n => {
-    const o = document.createElement('option');
-    o.value = n; o.textContent = n;
-    sel.appendChild(o);
-  });
+  NAMES.forEach(n => { const o = document.createElement('option'); o.value = n; o.textContent = n; sel.appendChild(o); });
 }
 
 function key(a) { return `${a.faculty}||${a.course}||${a.semester}||${a.ap}`; }
@@ -176,26 +146,23 @@ function onFacultySelect() {
   div.innerHTML = `
     <div class="progress-wrap">
       <div class="progress-label">${done} of ${mine.length} submitted</div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(done / mine.length * 100)}%"></div></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(done/mine.length*100)}%"></div></div>
     </div>
     ${mine.map(a => {
-      const sc = a.semester.startsWith('Sp') ? 'badge-sp' : a.semester.startsWith('Fa') ? 'badge-fa' : 'badge-pending';
+      const sc = a.semester === 'CY 2026' ? 'badge-cy' : a.semester.startsWith('Sp') ? 'badge-sp' : 'badge-fa';
       const isDone = isSubmitted(a);
-      return `<div class="card${isDone ? ' done' : ''}" onclick='openForm(${JSON.stringify(a).replace(/'/g, "&#39;")})'>
+      return `<div class="card${isDone?' done':''}" onclick='openForm(${JSON.stringify(a).replace(/'/g,"&#39;")})'>
         <div class="card-top">
-          <div>
-            <span class="card-course">${a.course}</span>
-            <span class="badge ${sc}" style="margin-left:8px">${a.semester}</span>
-          </div>
+          <div><span class="card-course">${a.course}</span><span class="badge ${sc}" style="margin-left:8px">${a.semester}</span></div>
           <div style="display:flex;align-items:center;gap:8px">
-            ${isDone ? `<span class="badge badge-done">Submitted</span>` : `<span class="badge badge-pending">Pending</span>`}
+            ${isDone?`<span class="badge badge-done">Submitted</span>`:`<span class="badge badge-pending">Pending</span>`}
             <span style="color:#aaa">→</span>
           </div>
         </div>
         <div class="card-meta">Outcome ${a.outcome} · AP ${a.ap}</div>
       </div>`;
     }).join('')}
-    ${done === mine.length ? `<div class="success-msg">All done — thank you, ${name.split(' ')[0]}!</div>` : ''}
+    ${done===mine.length?`<div class="success-msg">All done — thank you, ${name.split(' ')[0]}!</div>`:''}
   `;
 }
 
@@ -218,49 +185,29 @@ function submitEntry() {
   warn.style.display = 'none';
   const n = parseFloat(document.getElementById('f-num').value);
   const d = parseFloat(document.getElementById('f-den').value);
-  if (isNaN(n) || isNaN(d)) { warn.textContent = 'Please fill in both numbers.'; warn.style.display = 'block'; return; }
-  if (n < 0 || d < 0) { warn.textContent = 'Please enter valid numbers.'; warn.style.display = 'block'; return; }
-  if (n === 0 && d === 0) { }  // Allow 0/0 as N/A
-  else if (d === 0) { warn.textContent = 'Total students cannot be zero unless both numbers are zero (N/A).'; warn.style.display = 'block'; return; }
-  if (n > d && d > 0) { warn.textContent = 'Students meeting the target cannot exceed total students.'; warn.style.display = 'block'; return; }
-
+  if (isNaN(n)||isNaN(d)) { warn.textContent='Please fill in both numbers.'; warn.style.display='block'; return; }
+  if (n<0||d<0) { warn.textContent='Please enter valid numbers.'; warn.style.display='block'; return; }
+  if (n===0&&d===0) {}
+  else if (d===0) { warn.textContent='Total students cannot be zero unless both numbers are zero (N/A).'; warn.style.display='block'; return; }
+  if (n>d&&d>0) { warn.textContent='Students meeting the target cannot exceed total students.'; warn.style.display='block'; return; }
   document.getElementById('spinner').style.display = 'block';
-
-  const payload = {
-    program: 'MS',
-    faculty: curAssignment.faculty,
-    course: curAssignment.course,
-    semester: curAssignment.semester,
-    outcome: curAssignment.outcome,
-    ap: curAssignment.ap,
-    numerator: n,
-    denominator: d
-  };
-
   fetch(SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
+    method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({program:'MS', faculty:curAssignment.faculty, course:curAssignment.course,
+      semester:curAssignment.semester, outcome:curAssignment.outcome, ap:curAssignment.ap, numerator:n, denominator:d})
   }).then(() => {
     submitted.push(key(curAssignment));
-    localStorage.setItem('ms-ie-submitted-' + REPORTING_YEAR, JSON.stringify(submitted));
+    localStorage.setItem('ms-ie-submitted-'+REPORTING_YEAR, JSON.stringify(submitted));
     document.getElementById('spinner').style.display = 'none';
     goBack();
   }).catch(() => {
     document.getElementById('spinner').style.display = 'none';
-    warn.textContent = 'Submission failed. Please try again.';
-    warn.style.display = 'block';
+    warn.textContent = 'Submission failed. Please try again.'; warn.style.display = 'block';
   });
 }
 
 function goBack() { showStep('step-select'); onFacultySelect(); }
-
-function showStep(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
+function showStep(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 init();
 </script>
 </body>

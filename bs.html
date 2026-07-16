@@ -49,10 +49,9 @@
 </head>
 <body>
 <div class="container">
-
   <div id="step-select" class="screen active">
     <h1>EPY BS — IE Data Entry</h1>
-    <p class="subtitle">Calendar Year 2025 &nbsp;·&nbsp; Select your name to get started</p>
+    <p class="subtitle">Calendar Year 2026 &nbsp;·&nbsp; Select your name to get started</p>
     <label for="faculty-select">Your name</label>
     <select id="faculty-select" onchange="onFacultySelect()">
       <option value="">— Select your name —</option>
@@ -73,15 +72,13 @@
     </div>
     <div class="spinner" id="spinner">Saving...</div>
   </div>
-
 </div>
 
 <script>
 // ============================================================
 // CONFIGURATION — UPDATE THIS SECTION EACH YEAR
 // ============================================================
-
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHTva6L7i8b3P3FVQKh406L9mHlOsZGwEBfuTTuCYW0XxquFor1naZzTgEzLiY_lLW/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw_1dMcVM-0Kb02gMS-Q8C8JJvyThfm0ylxtsb0qkbfkXZ0DjtM1zC7mWFAb9EnXLtD3Q/exec';
 const REPORTING_YEAR = 'CY 2026';
 
 // ============================================================
@@ -90,62 +87,49 @@ const REPORTING_YEAR = 'CY 2026';
 // Do NOT change: course, outcome, ap, or sentence
 // ============================================================
 const ROSTER = [
+  // --- OUTCOME 1, AP 1: EPY 4033 Final project
+  { faculty:'Kasia Gallo',       course:'EPY 4033', semester:'Spring 2026', outcome:1, ap:1,
+    sentence:'scored satisfactory (80%) or better on the final project.' },
+  { faculty:'Mehdi Garemani',    course:'EPY 4033', semester:'Fall 2026',   outcome:1, ap:1,
+    sentence:'scored satisfactory (80%) or better on the final project.' },
 
-  // --- OUTCOME 1, AP 1 ---
-  // EPY 4033: Final project
-  { faculty: 'Kasia Gallo',    course: 'EPY 4033', semester: 'Spring 2026', outcome: 1, ap: 1,
-    sentence: 'scored satisfactory (80%) or better on the final project.' },
-  { faculty: 'Mehdi Garemani', course: 'EPY 4033', semester: 'Fall 2026',   outcome: 1, ap: 1,
-    sentence: 'scored satisfactory (80%) or better on the final project.' },
+  // --- OUTCOME 1, AP 2: EPY 3513 Literature review project
+  { faculty:'Kasia Gallo',       course:'EPY 3513', semester:'Spring 2026', outcome:1, ap:2,
+    sentence:'scored satisfactory (80%) or better on the project.' },
+  { faculty:'Kasia Gallo',       course:'EPY 3513', semester:'Fall 2026',   outcome:1, ap:2,
+    sentence:'scored satisfactory (80%) or better on the project.' },
 
-  // --- OUTCOME 1, AP 2 ---
-  // EPY 3513: Literature review project
-  { faculty: 'Kasia Gallo',    course: 'EPY 3513', semester: 'Spring 2026', outcome: 1, ap: 2,
-    sentence: 'scored satisfactory (80%) or better on the project.' },
-  { faculty: 'Kasia Gallo',    course: 'EPY 3513', semester: 'Fall 2026',   outcome: 1, ap: 2,
-    sentence: 'scored satisfactory (80%) or better on the project.' },
+  // --- OUTCOME 2, AP 1: EPY 4513 Final research project
+  { faculty:'Leila Kargaripadar',course:'EPY 4513', semester:'Spring 2026', outcome:2, ap:1,
+    sentence:'scored satisfactory (80%) or better on the final project.' },
+  { faculty:'Mehdi Garemani',    course:'EPY 4513', semester:'Fall 2026',   outcome:2, ap:1,
+    sentence:'scored satisfactory (80%) or better on the final project.' },
 
-  // --- OUTCOME 2, AP 1 ---
-  // EPY 4513: Final research project
-  { faculty: 'Leila Kargaripadar', course: 'EPY 4513', semester: 'Spring 2026', outcome: 2, ap: 1,
-    sentence: 'scored satisfactory (80%) or better on the final project.' },
-  { faculty: 'Mehdi Garemani',  course: 'EPY 4513', semester: 'Fall 2026',   outcome: 2, ap: 1,
-    sentence: 'scored satisfactory (80%) or better on the final project.' },
+  // --- OUTCOME 2, AP 2: EPY 4553 Creativity project
+  { faculty:'Sareh Karami',      course:'EPY 4553', semester:'Spring 2026', outcome:2, ap:2,
+    sentence:'scored satisfactory (80%) or better on the final score as an index of their performance on the activity, scholarly papers, and 5-step plan.' },
+  { faculty:'Sareh Karami',      course:'EPY 4553', semester:'Fall 2026',   outcome:2, ap:2,
+    sentence:'scored satisfactory (80%) or better on the final score as an index of their performance on the activity, scholarly papers, and 5-step plan.' },
 
-  // --- OUTCOME 2, AP 2 ---
-  // EPY 4553: Creativity project
-  { faculty: 'Sareh Karami', course: 'EPY 4553', semester: 'Spring 2026', outcome: 2, ap: 2,
-    sentence: 'scored satisfactory (80%) or better on the final score as an index of their performance on the activity, scholarly papers, and 5-step plan.' },
-  { faculty: 'Sareh Karami',   course: 'EPY 4553', semester: 'Fall 2026',   outcome: 2, ap: 2,
-    sentence: 'scored satisfactory (80%) or better on the final score as an index of their performance on the activity, scholarly papers, and 5-step plan.' },
+  // --- OUTCOME 3, AP 1: EPY 4683 Portfolio
+  { faculty:'Benjamin Ansah',    course:'EPY 4683', semester:'Fall 2026',   outcome:3, ap:1,
+    sentence:'scored satisfactory (80%) or better on the job/school portfolio.' },
 
-  // --- OUTCOME 3, AP 1 ---
-  // EPY 4683: Job/school portfolio
-  { faculty: 'Benjamin', course: 'EPY 4683', semester: 'Fall 2026', outcome: 3, ap: 1,
-    sentence: 'scored satisfactory (80%) or better on the job/school portfolio.' },
-
-  // --- OUTCOME 3, AP 2 ---
-  // EPY 4683: Mock interview
-  { faculty: 'Benjamin Ansah', course: 'EPY 4683', semester: 'Fall 2026', outcome: 3, ap: 2,
-    sentence: 'scored satisfactory (80%) or better on the mock interview and accompanying reflection.' },
-
+  // --- OUTCOME 3, AP 2: EPY 4683 Mock interview
+  { faculty:'Benjamin Ansah',    course:'EPY 4683', semester:'Fall 2026',   outcome:3, ap:2,
+    sentence:'scored satisfactory (80%) or better on the mock interview and accompanying reflection.' },
 ];
 
 // ============================================================
 // APP LOGIC — NO NEED TO EDIT BELOW THIS LINE
 // ============================================================
-
 const NAMES = [...new Set(ROSTER.map(r => r.faculty))].sort();
 let submitted = JSON.parse(localStorage.getItem('bs-ie-submitted-' + REPORTING_YEAR) || '[]');
 let curAssignment = null;
 
 function init() {
   const sel = document.getElementById('faculty-select');
-  NAMES.forEach(n => {
-    const o = document.createElement('option');
-    o.value = n; o.textContent = n;
-    sel.appendChild(o);
-  });
+  NAMES.forEach(n => { const o = document.createElement('option'); o.value = n; o.textContent = n; sel.appendChild(o); });
 }
 
 function key(a) { return `${a.faculty}||${a.course}||${a.semester}||${a.ap}`; }
@@ -160,27 +144,24 @@ function onFacultySelect() {
   div.innerHTML = `
     <div class="progress-wrap">
       <div class="progress-label">${done} of ${mine.length} submitted</div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(done / mine.length * 100)}%"></div></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(done/mine.length*100)}%"></div></div>
     </div>
     ${mine.map(a => {
       const sc = a.semester.startsWith('Sp') ? 'badge-sp' : 'badge-fa';
       const apLabel = a.course === 'EPY 4683' ? ` · AP ${a.ap}` : '';
       const isDone = isSubmitted(a);
-      return `<div class="card${isDone ? ' done' : ''}" onclick='openForm(${JSON.stringify(a).replace(/'/g, "&#39;")})'>
+      return `<div class="card${isDone?' done':''}" onclick='openForm(${JSON.stringify(a).replace(/'/g,"&#39;")})'>
         <div class="card-top">
-          <div>
-            <span class="card-course">${a.course}${apLabel}</span>
-            <span class="badge ${sc}" style="margin-left:8px">${a.semester}</span>
-          </div>
+          <div><span class="card-course">${a.course}${apLabel}</span><span class="badge ${sc}" style="margin-left:8px">${a.semester}</span></div>
           <div style="display:flex;align-items:center;gap:8px">
-            ${isDone ? `<span class="badge badge-done">Submitted</span>` : `<span class="badge badge-pending">Pending</span>`}
+            ${isDone?`<span class="badge badge-done">Submitted</span>`:`<span class="badge badge-pending">Pending</span>`}
             <span style="color:#aaa">→</span>
           </div>
         </div>
         <div class="card-meta">Outcome ${a.outcome} · AP ${a.ap}</div>
       </div>`;
     }).join('')}
-    ${done === mine.length ? `<div class="success-msg">All done — thank you, ${name.split(' ')[0]}!</div>` : ''}
+    ${done===mine.length?`<div class="success-msg">All done — thank you, ${name.split(' ')[0]}!</div>`:''}
   `;
 }
 
@@ -204,49 +185,29 @@ function submitEntry() {
   warn.style.display = 'none';
   const n = parseFloat(document.getElementById('f-num').value);
   const d = parseFloat(document.getElementById('f-den').value);
-  if (isNaN(n) || isNaN(d)) { warn.textContent = 'Please fill in both numbers.'; warn.style.display = 'block'; return; }
-  if (n < 0 || d < 0) { warn.textContent = 'Please enter valid numbers.'; warn.style.display = 'block'; return; }
-  if (n === 0 && d === 0) { } // Allow 0/0 as N/A
-  else if (d === 0) { warn.textContent = 'Total students cannot be zero unless both numbers are zero (N/A).'; warn.style.display = 'block'; return; }
-  if (n > d && d > 0) { warn.textContent = 'Students meeting the target cannot exceed total students.'; warn.style.display = 'block'; return; }
-
+  if (isNaN(n)||isNaN(d)) { warn.textContent='Please fill in both numbers.'; warn.style.display='block'; return; }
+  if (n<0||d<0) { warn.textContent='Please enter valid numbers.'; warn.style.display='block'; return; }
+  if (n===0&&d===0) {} // Allow 0/0 as N/A
+  else if (d===0) { warn.textContent='Total students cannot be zero unless both numbers are zero (N/A).'; warn.style.display='block'; return; }
+  if (n>d&&d>0) { warn.textContent='Students meeting the target cannot exceed total students.'; warn.style.display='block'; return; }
   document.getElementById('spinner').style.display = 'block';
-
-  const payload = {
-    program: 'BS',
-    faculty: curAssignment.faculty,
-    course: curAssignment.course,
-    semester: curAssignment.semester,
-    outcome: curAssignment.outcome,
-    ap: curAssignment.ap,
-    numerator: n,
-    denominator: d
-  };
-
   fetch(SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
+    method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({program:'BS', faculty:curAssignment.faculty, course:curAssignment.course,
+      semester:curAssignment.semester, outcome:curAssignment.outcome, ap:curAssignment.ap, numerator:n, denominator:d})
   }).then(() => {
     submitted.push(key(curAssignment));
-    localStorage.setItem('bs-ie-submitted-' + REPORTING_YEAR, JSON.stringify(submitted));
+    localStorage.setItem('bs-ie-submitted-'+REPORTING_YEAR, JSON.stringify(submitted));
     document.getElementById('spinner').style.display = 'none';
     goBack();
   }).catch(() => {
     document.getElementById('spinner').style.display = 'none';
-    warn.textContent = 'Submission failed. Please try again.';
-    warn.style.display = 'block';
+    warn.textContent = 'Submission failed. Please try again.'; warn.style.display = 'block';
   });
 }
 
 function goBack() { showStep('step-select'); onFacultySelect(); }
-
-function showStep(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
+function showStep(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 init();
 </script>
 </body>

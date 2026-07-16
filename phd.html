@@ -51,11 +51,9 @@
 </head>
 <body>
 <div class="container">
-
-  <!-- Step 1: Select faculty -->
   <div id="step-select" class="screen active">
     <h1>EPY PhD — IE Data Entry</h1>
-    <p class="subtitle">Calendar Year 2025 &nbsp;·&nbsp; Select your name to get started</p>
+    <p class="subtitle">Calendar Year 2026 &nbsp;·&nbsp; Select your name to get started</p>
     <label for="faculty-select">Your name</label>
     <select id="faculty-select" onchange="onFacultySelect()">
       <option value="">— Select your name —</option>
@@ -63,7 +61,6 @@
     <div id="assignment-list" style="margin-top:1.5rem"></div>
   </div>
 
-  <!-- Step 2: Entry form -->
   <div id="step-form" class="screen">
     <button class="back-btn" onclick="goBack()">← Back</button>
     <div class="form-title" id="form-title"></div>
@@ -81,71 +78,52 @@
     </div>
     <div class="spinner" id="spinner">Saving...</div>
   </div>
-
 </div>
 
 <script>
 // ============================================================
 // CONFIGURATION — UPDATE THIS SECTION EACH YEAR
 // ============================================================
-
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHTva6L7i8b3P3FVQKh406L9mHlOsZGwEBfuTTuCYW0XxquFor1naZzTgEzLiY_lLW/exec';
-const REPORTING_YEAR = 'CY 2025';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw_1dMcVM-0Kb02gMS-Q8C8JJvyThfm0ylxtsb0qkbfkXZ0DjtM1zC7mWFAb9EnXLtD3Q/exec';
+const REPORTING_YEAR = 'CY 2026';
 
 // ============================================================
 // ROSTER — UPDATE EACH YEAR
-// Only change: faculty name and semester
-// Do NOT change: course, outcome, ap, or sentence
 // ============================================================
 const ROSTER = [
+  // --- OUTCOME 1, AP 1: Preliminary exams — reported by coordinator
+  { faculty:'Elaine Wei', course:'Prelim Exam',  semester:'CY 2026', outcome:1, ap:1,
+    sentence:'passed both the written and oral preliminary examinations on their first attempt.' },
 
-  // --- OUTCOME 1, AP 1 ---
-  // Preliminary exams — reported by coordinator
-  { faculty: 'Elaine Wei', course: 'Prelim Exam', semester: 'CY 2025', outcome: 1, ap: 1,
-    sentence: 'passed the written and oral preliminary examinations on their first attempt.' },
+  // --- OUTCOME 1, AP 2: Dissertation defense — reported by coordinator
+  { faculty:'Elaine Wei', course:'Dissertation', semester:'CY 2026', outcome:1, ap:2,
+    sentence:'who defended their dissertation study were judged by the doctoral committee as passing the defense.' },
 
-  // --- OUTCOME 1, AP 2 ---
-  // EPY 9213: Multivariate statistics final project
-  { faculty: 'Elaine Wei', course: 'EPY 9213', semester: 'Fall 2025', outcome: 1, ap: 2,
-    sentence: 'scored satisfactory (80%) or better on the final project.' },
+  // --- OUTCOME 2, AP 1: EPY 9213 Multivariate statistics
+  { faculty:'Elaine Wei', course:'EPY 9213',     semester:'Fall 2026', outcome:2, ap:1,
+    sentence:'scored satisfactory (80%) or better on the assignments and final project.' },
 
-  // --- OUTCOME 2, AP 1 ---
-  // Dissertation proposal/defense — reported by coordinator
-  { faculty: 'Elaine Wei', course: 'Dissertation', semester: 'CY 2025', outcome: 2, ap: 1,
-    sentence: 'who proposed or defended a dissertation study were judged by the doctoral committee as passing the proposal or defense.' },
+  // --- OUTCOME 4, AP 1: CV Review — reported by coordinator
+  { faculty:'Elaine Wei', course:'CV Review',    semester:'CY 2026', outcome:4, ap:1,
+    sentence:'developed, shared, and revised their curriculum vitae with faculty and peer graduate students for feedback.' },
 
-  // --- OUTCOME 2, AP 2 ---
-  // Conference presentations — reported by coordinator
-  { faculty: 'Elaine Wei', course: 'Conference Presentation', semester: 'CY 2025', outcome: 2, ap: 2,
-    sentence: 'of the students presented their research at a local, state, regional, or national conference.' },
-
-  // --- OUTCOME 3, AP 1 ---
-  // CV development — reported by coordinator
-  { faculty: 'Elaine Wei', course: 'CV Review', semester: 'CY 2025', outcome: 3, ap: 1,
-    sentence: 'developed, shared, and revised their curriculum vitae with faculty and peer graduate students for feedback.' },
-
-  // --- OUTCOME 3, AP 2 ---
-  // Annual evaluation — reported by coordinator
-  { faculty: 'Elaine Wei', course: 'Annual Eval', semester: 'CY 2025', outcome: 3, ap: 2,
-    sentence: 'were rated as making satisfactory progress with unanimous agreement by the program faculty.' },
-
+  // --- OUTCOME 4, AP 2: Annual Eval — reported by coordinator
+  { faculty:'Elaine Wei', course:'Annual Eval',  semester:'CY 2026', outcome:4, ap:2,
+    sentence:'were rated as making satisfactory progress with unanimous agreement by the program faculty.' },
 ];
+
+// Note: Outcome 2 AP 2 (EPY 8513), Outcome 3 AP 1 (EPY 8223), Outcome 3 AP 2 (EPY 6073) not offered in CY 2026 — recorded as N/A by coordinator
 
 // ============================================================
 // APP LOGIC — NO NEED TO EDIT BELOW THIS LINE
 // ============================================================
-
 const NAMES = [...new Set(ROSTER.map(r => r.faculty))].sort();
 let submitted = JSON.parse(localStorage.getItem('phd-ie-submitted-' + REPORTING_YEAR) || '[]');
 let curAssignment = null;
 
 function init() {
   const sel = document.getElementById('faculty-select');
-  NAMES.forEach(n => {
-    const o = document.createElement('option');
-    o.value = n; o.textContent = n;
-    sel.appendChild(o);
-  });
+  NAMES.forEach(n => { const o = document.createElement('option'); o.value = n; o.textContent = n; sel.appendChild(o); });
 }
 
 function key(a) { return `${a.faculty}||${a.course}||${a.semester}||${a.ap}`; }
@@ -160,26 +138,23 @@ function onFacultySelect() {
   div.innerHTML = `
     <div class="progress-wrap">
       <div class="progress-label">${done} of ${mine.length} submitted</div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(done / mine.length * 100)}%"></div></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(done/mine.length*100)}%"></div></div>
     </div>
     ${mine.map(a => {
-      const sc = a.semester === 'CY 2025' ? 'badge-cy' : a.semester.startsWith('Sp') ? 'badge-sp' : 'badge-fa';
+      const sc = a.semester === 'CY 2026' ? 'badge-cy' : a.semester.startsWith('Sp') ? 'badge-sp' : 'badge-fa';
       const isDone = isSubmitted(a);
-      return `<div class="card${isDone ? ' done' : ''}" onclick='openForm(${JSON.stringify(a).replace(/'/g, "&#39;")})'>
+      return `<div class="card${isDone?' done':''}" onclick='openForm(${JSON.stringify(a).replace(/'/g,"&#39;")})'>
         <div class="card-top">
-          <div>
-            <span class="card-course">${a.course}</span>
-            <span class="badge ${sc}" style="margin-left:8px">${a.semester}</span>
-          </div>
+          <div><span class="card-course">${a.course}</span><span class="badge ${sc}" style="margin-left:8px">${a.semester}</span></div>
           <div style="display:flex;align-items:center;gap:8px">
-            ${isDone ? `<span class="badge badge-done">Submitted</span>` : `<span class="badge badge-pending">Pending</span>`}
+            ${isDone?`<span class="badge badge-done">Submitted</span>`:`<span class="badge badge-pending">Pending</span>`}
             <span style="color:#aaa">→</span>
           </div>
         </div>
         <div class="card-meta">Outcome ${a.outcome} · AP ${a.ap}</div>
       </div>`;
     }).join('')}
-    ${done === mine.length ? `<div class="success-msg">All done — thank you, ${name.split(' ')[0]}!</div>` : ''}
+    ${done===mine.length?`<div class="success-msg">All done — thank you, ${name.split(' ')[0]}!</div>`:''}
   `;
 }
 
@@ -202,49 +177,29 @@ function submitEntry() {
   warn.style.display = 'none';
   const n = parseFloat(document.getElementById('f-num').value);
   const d = parseFloat(document.getElementById('f-den').value);
-  if (isNaN(n) || isNaN(d)) { warn.textContent = 'Please fill in both numbers.'; warn.style.display = 'block'; return; }
-  if (n < 0 || d < 0) { warn.textContent = 'Please enter valid numbers.'; warn.style.display = 'block'; return; }
-  if (n === 0 && d === 0) { }  // Allow 0/0 as N/A
-  else if (d === 0) { warn.textContent = 'Total students cannot be zero unless both numbers are zero (N/A).'; warn.style.display = 'block'; return; }
-  if (n > d && d > 0) { warn.textContent = 'Students meeting the target cannot exceed total students.'; warn.style.display = 'block'; return; }
-
+  if (isNaN(n)||isNaN(d)) { warn.textContent='Please fill in both numbers.'; warn.style.display='block'; return; }
+  if (n<0||d<0) { warn.textContent='Please enter valid numbers.'; warn.style.display='block'; return; }
+  if (n===0&&d===0) {}
+  else if (d===0) { warn.textContent='Total students cannot be zero unless both numbers are zero (N/A).'; warn.style.display='block'; return; }
+  if (n>d&&d>0) { warn.textContent='Students meeting the target cannot exceed total students.'; warn.style.display='block'; return; }
   document.getElementById('spinner').style.display = 'block';
-
-  const payload = {
-    program: 'PhD',
-    faculty: curAssignment.faculty,
-    course: curAssignment.course,
-    semester: curAssignment.semester,
-    outcome: curAssignment.outcome,
-    ap: curAssignment.ap,
-    numerator: n,
-    denominator: d
-  };
-
   fetch(SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
+    method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({program:'PhD', faculty:curAssignment.faculty, course:curAssignment.course,
+      semester:curAssignment.semester, outcome:curAssignment.outcome, ap:curAssignment.ap, numerator:n, denominator:d})
   }).then(() => {
     submitted.push(key(curAssignment));
-    localStorage.setItem('phd-ie-submitted-' + REPORTING_YEAR, JSON.stringify(submitted));
+    localStorage.setItem('phd-ie-submitted-'+REPORTING_YEAR, JSON.stringify(submitted));
     document.getElementById('spinner').style.display = 'none';
     goBack();
   }).catch(() => {
     document.getElementById('spinner').style.display = 'none';
-    warn.textContent = 'Submission failed. Please try again.';
-    warn.style.display = 'block';
+    warn.textContent = 'Submission failed. Please try again.'; warn.style.display = 'block';
   });
 }
 
 function goBack() { showStep('step-select'); onFacultySelect(); }
-
-function showStep(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
+function showStep(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 init();
 </script>
 </body>
